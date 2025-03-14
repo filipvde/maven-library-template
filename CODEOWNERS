@@ -7,4 +7,6 @@
 # review when someone opens a pull request.
 *       @filipvde
 
+/.github/ @filipvde
+
 # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
