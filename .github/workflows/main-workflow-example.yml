@@ -11,11 +11,11 @@ on:
 jobs:
   test:
     #uses: ./.github/workflows/partiallyworkflows/test-workflow.yml  # Calls test workflow
-    uses: ./.github/includeworkflows/test-workflow.yml  # Calls test workflow
+    uses: ./.github/actions/includeworkflows/test-workflow  # Calls test workflow
   
   build:
     #uses: ./.github/workflows/partiallyworkflows/build-workflow.yml  # Calls build workflow
-    uses: ./.github/includeworkflows/build-workflow.yml  # Calls build workflow
+    uses: ./.github/actions/includeworkflows/build-workflow  # Calls build workflow
 
   #deploy:
    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'  # Only deploy on master/main
