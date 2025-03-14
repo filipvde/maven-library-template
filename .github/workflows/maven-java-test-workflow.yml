@@ -1,7 +1,12 @@
 name: Run Tests
 
 on:
-  workflow_call:  # Allows this workflow to be triggered by another workflow
+  push:
+    branches:
+      - "**"   # Runs on all branches except master (handled separately)
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
   test:

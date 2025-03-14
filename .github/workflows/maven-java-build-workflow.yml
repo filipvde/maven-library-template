@@ -1,7 +1,12 @@
 name: Build Project
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - "**"   # Runs on all branches except master (handled separately)
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
