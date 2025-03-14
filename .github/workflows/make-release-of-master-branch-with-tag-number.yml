@@ -1,0 +1,66 @@
+# Here’s a GitHub Actions workflow that creates a release from the master branch, using the version number from pom.xml as the tag name.
+
+# How It Works
+# 1) Triggers manually (workflow_dispatch) with an optional input for the release tag.
+# 2) Extracts the version number from pom.xml if no tag is provided.
+# 3) Creates a GitHub tag and a release with that version number.
+
+# How to Use
+# 1) Go to GitHub → Actions → Select Release from Master workflow.
+# 2) Click Run Workflow.
+# 3) Optional: Enter a custom tag number. If left empty, it will automatically use the version from pom.xml.
+# 4) The workflow:
+#       - Extracts the version from pom.xml.
+#       - Uses it as the tag (unless overridden).
+#       - Creates a Git tag and GitHub Release.
+
+# Requirements
+# - Maven installed on the runner (default on GitHub Actions).
+# - GitHub repository write access for tagging & releasing.
+# - The pom.xml version should be properly formatted.
+
+# This workflow automates releases based on your pom.xml version while allowing manual tag input when needed. 🚀 Let me know if you need any modifications!
+
+name: Release from Master with tagnumber prefilled as option
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (default: pom.xml version)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from pom.xml
+        id: get_version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Set release tag
+        id: set_tag
+        run: echo "TAG=${{ github.event.inputs.tag || env.VERSION }}" >> $GITHUB_ENV
+
+      - name: Create GitHub tag
+        run: |
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: "Release ${{ env.TAG }}"
+          body: "Automated release of version ${{ env.TAG }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
