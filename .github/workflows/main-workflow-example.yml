@@ -1,0 +1,20 @@
+name: Main Workflow Dispatcher
+
+on:
+  push:
+    branches:
+      - "**"   # Runs on all branches except master (handled separately)
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  test:
+    uses: ./.github/workflows/subfolder/test-workflow.yml  # Calls test workflow
+  
+  build:
+    uses: ./.github/workflows/subfolder/build-workflow.yml  # Calls build workflow
+
+  deploy:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'  # Only deploy on master/main
+    uses: ./.github/workflows/subfolder/deploy-workflow.yml
