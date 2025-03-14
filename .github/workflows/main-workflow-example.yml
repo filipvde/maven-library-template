@@ -10,11 +10,11 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/subfolder/test-workflow.yml  # Calls test workflow
+    uses: ./.github/workflows/partially-workflows/test-workflow.yml  # Calls test workflow
   
   build:
-    uses: ./.github/workflows/subfolder/build-workflow.yml  # Calls build workflow
+    uses: ./.github/workflows/partially-workflows/build-workflow.yml  # Calls build workflow
 
   deploy:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'  # Only deploy on master/main
-    uses: ./.github/workflows/subfolder/deploy-workflow.yml
+    uses: ./.github/workflows/partially-workflows/deploy-workflow.yml
