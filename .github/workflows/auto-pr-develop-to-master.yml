@@ -1,0 +1,44 @@
+# How It Works
+# 1) It listens for pull requests that are closed on develop.
+# 2) If the PR was merged (not just closed), the workflow runs.
+# 3) It creates a new PR from develop to master using the peter-evans/create-pull-request action.
+
+# Requirements
+# => Ensure GITHUB_TOKEN has permissions to create PRs (default permissions are usually sufficient).
+# => You can customize the PR title, body, and labels as needed.
+
+# Steps the workflow performs:
+# 1) Triggers on a pull request merge to the develop branch.
+# 2) Checks if the PR was merged successfully.
+# 3) Creates a pull request from develop to master.
+
+name: Auto PR from Develop to Master
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - develop
+
+jobs:
+  create-pull-request:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request to Master
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: develop
+          title: "Merge Develop into Master"
+          body: "This PR merges all changes from `develop` into `master`."
+          labels: "auto-pr"
+          draft: false
